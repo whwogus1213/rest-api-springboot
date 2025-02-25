@@ -5,7 +5,6 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EventTest {
-
   @Test
   public void builder() {
     Event event = Event.builder().build();
@@ -25,4 +24,5 @@ public class EventTest {
     assertThat(event.getName()).isEqualTo(name);
     assertThat(event.getDescription()).isEqualTo(description);
   }
+
 }
