@@ -73,7 +73,7 @@ public class EventControllerTests {
             .basePrice(100)
             .maxPrice(200)
             .limitOfEnrollment(100)
-            . location("강남역")
+            .location("강남역")
             .free(true)
             .offline(false)
             .eventStatus(EventStatus.PUBLISHED)
@@ -86,6 +86,17 @@ public class EventControllerTests {
             .andDo(print())
             .andExpect(status().isBadRequest());
 
+  }
+
+  @Test
+  public void createEvent_Bad_request_Empty_input() throws Exception {
+    EventDto eventDto = EventDto.builder().build();
+
+    mockMvc.perform(post("/api/events/")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMpper.writeValueAsString(eventDto))
+            )
+            .andExpect(status().isBadRequest());
   }
 
 
