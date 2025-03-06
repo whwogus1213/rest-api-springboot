@@ -93,7 +93,7 @@ public class EventControllerTests {
 
   @Test
   @TestDescription("입력값이 비어있는 경우에 에러가 발생하는 테스트")
-  public void createEvent_Bad_request_Empty_input() throws Exception {
+  public void createEvent_Bad_Request_Empty_input() throws Exception {
     EventDto eventDto = EventDto.builder().build();
 
     mockMvc.perform(post("/api/events/")
@@ -105,7 +105,7 @@ public class EventControllerTests {
 
   @Test
   @TestDescription("입력값이 잘못된 경우에 에러가 발생하는 테스트")
-  public void createEvent_Bad_request_Wrong_input() throws Exception {
+  public void createEvent_Bad_Request_Wrong_input() throws Exception {
     EventDto eventDto = EventDto.builder()
             .name("Spring")
             .description("REST API Development with Spring Boot")
@@ -123,7 +123,12 @@ public class EventControllerTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMpper.writeValueAsString(eventDto))
             )
-            .andExpect(status().isBadRequest());
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$[0].objectName").exists()) // 필드 존재 확인
+            .andExpect(jsonPath("$[0].defaultMessage").exists())
+            .andExpect(jsonPath("$[0].code").exists())
+            ;
   }
 
 
