@@ -1,13 +1,14 @@
 package com.jaehyun.restapispringboot.events;
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of="id")
 @Entity
-public class Event {
+public class Event extends RepresentationModel<Event> {
 
   @Id
   @GeneratedValue
@@ -26,5 +27,23 @@ public class Event {
   private boolean free;
   @Enumerated(EnumType.STRING)
   private EventStatus eventStatus = EventStatus.DRAFT;
+
+  public void update() {
+    // Update free
+    if (this.basePrice == 0 && this.maxPrice == 0) {
+      this.free = true;
+    } else {
+      this.free = false;
+    }
+
+    // Update offline
+    if(location == null || location.isBlank()) {
+      offline = false;
+    } else {
+      offline = true;
+    }
+
+
+  }
 
 }

@@ -2,6 +2,7 @@ package com.jaehyun.restapispringboot.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaehyun.restapispringboot.common.TestDescription;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -40,14 +41,14 @@ public class EventControllerTests {
     EventDto event = EventDto.builder()
             .name("Spring")
             .description("REST API Development with Spring Boot")
-            .beginEnrollmentDateTime(LocalDateTime.of(2025, 11, 1, 14, 21))
-            .closeEnrollmentDateTime(LocalDateTime.of(2025, 12, 1, 14, 21))
-            .beginEventDateTime(LocalDateTime.of(2025, 11, 2, 14, 21))
-            .endEventDateTime(LocalDateTime.of(2025, 11, 30, 14, 21))
+            .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 14, 21))
+            .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 14, 21))
+            .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 14, 21))
+            .endEventDateTime(LocalDateTime.of(2018, 11, 26, 14, 21))
             .basePrice(100)
             .maxPrice(200)
             .limitOfEnrollment(100)
-            . location("강남역")
+            .location("강남역")
             .build();
 
     mockMvc.perform(post("/api/events/")
@@ -58,7 +59,15 @@ public class EventControllerTests {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("id").exists())
             .andExpect(header().exists(HttpHeaders.LOCATION))
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+            .andExpect(jsonPath("id").value(Matchers.not(100)))
+            .andExpect(jsonPath("free").value(false))
+            .andExpect(jsonPath("offline").value(true))
+            .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
+            .andExpect(jsonPath("_links.self").exists())
+            .andExpect(jsonPath("_links.query-events").exists())
+            .andExpect(jsonPath("_links.update-event").exists())
+    ;
 
   }
 
